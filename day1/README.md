@@ -2,7 +2,7 @@
 
 このリポジトリは、StreamlitとFastAPIを使用したアプリケーションの開発および演習用のディレクトリです。
 
-演習には、「Google Colab」を使うことを想定しています。
+演習には、「Google Colab」を使うことを想定しています。→ローカル上で動作するように改変しています。
 
 リポジトリ内の「day1_practice.ipynb」をGoogle Colabで開き、演習を行なってください。
 
