@@ -126,8 +126,22 @@ black main.py
    - プルリクエスト時に自動でチェックを実行 
 
 #### 演習3で使用する主なコマンド
-GitHub CLIを使用した場合のプルリクエストの流れ
 
+あらかじめGitHub CLIをインストールしておく
+```bash
+sudo apt install gh
+```
+GitHub CLIを使用するためにログイン
+```bash
+gh auth login
+? What account do you want to log into? GitHub.com
+? What is your preferred protocol for Git operations on this host? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+? How would you like to authenticate GitHub CLI? Login with a web browser
+! First copy your one-time code: ****-****
+Press Enter to open github.com in your browser... 
+```
+GitHub CLIを使用した場合のプルリクエストの流れ
 ```bash
 git branch develop
 git checkout develop
