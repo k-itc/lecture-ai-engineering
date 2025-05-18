@@ -11,6 +11,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+import lightgbm as lgb
 
 # テスト用データとモデルパスを定義
 DATA_PATH = os.path.join(os.path.dirname(__file__), "../data/Titanic.csv")
@@ -171,3 +172,62 @@ def test_model_reproducibility(sample_data, preprocessor):
     assert np.array_equal(
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
+
+
+def test_randomforest_vs_lightgbm(sample_data, preprocessor):
+    """RandomForestとLightGBMの精度・推論速度を比較"""
+    # データの分割
+    X = sample_data.drop("Survived", axis=1)
+    y = sample_data["Survived"].astype(int)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+
+    # RandomForestパイプライン
+    rf_model = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", RandomForestClassifier(n_estimators=100, random_state=42)),
+        ]
+    )
+    # LightGBMパイプライン
+    lgb_model = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", lgb.LGBMClassifier(n_estimators=100, random_state=42)),
+        ]
+    )
+
+    # 学習
+    rf_model.fit(X_train, y_train)
+    lgb_model.fit(X_train, y_train)
+
+    # 精度比較
+    rf_pred = rf_model.predict(X_test)
+    lgb_pred = lgb_model.predict(X_test)
+    rf_acc = accuracy_score(y_test, rf_pred)
+    lgb_acc = accuracy_score(y_test, lgb_pred)
+
+    print(f"RandomForest accuracy: {rf_acc:.4f}")
+    print(f"LightGBM accuracy: {lgb_acc:.4f}")
+
+    # 推論速度比較
+    start = time.time()
+    rf_model.predict(X_test)
+    rf_time = time.time() - start
+
+    start = time.time()
+    lgb_model.predict(X_test)
+    lgb_time = time.time() - start
+
+    print(f"RandomForest inference time: {rf_time:.4f}秒")
+    print(f"LightGBM inference time: {lgb_time:.4f}秒")
+
+    # テスト: どちらも0.7以上の精度であること
+    assert rf_acc >= 0.7, f"RandomForestの精度が低すぎます: {rf_acc}"
+    assert lgb_acc >= 0.7, f"LightGBMの精度が低すぎます: {lgb_acc}"
+
+    # テスト: LightGBMの方が精度がよいこと
+    assert (
+        lgb_acc > rf_acc
+    ), f"LightGBMの精度がRandomForestより低いです: {lgb_acc} <= {rf_acc}"
