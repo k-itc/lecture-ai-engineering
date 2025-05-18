@@ -173,6 +173,7 @@ def test_model_reproducibility(sample_data, preprocessor):
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
 
+
 def test_randomforest_vs_lightgbm(sample_data, preprocessor):
     """RandomForestとLightGBMの精度・推論速度を比較"""
     # データの分割
@@ -227,4 +228,6 @@ def test_randomforest_vs_lightgbm(sample_data, preprocessor):
     assert lgb_acc >= 0.7, f"LightGBMの精度が低すぎます: {lgb_acc}"
 
     # テスト: LightGBMの方が精度がよいこと
-    assert lgb_acc > rf_acc, f"LightGBMの精度がRandomForestより低いです: {lgb_acc} <= {rf_acc}"
+    assert (
+        lgb_acc > rf_acc
+    ), f"LightGBMの精度がRandomForestより低いです: {lgb_acc} <= {rf_acc}"
