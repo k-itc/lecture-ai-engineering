@@ -126,12 +126,19 @@ black main.py
    - プルリクエスト時に自動でチェックを実行 
 
 #### 演習3で使用する主なコマンド
-
-あらかじめGitHub CLIをインストールしておく
+GitHub CLIを使用した場合のプルリクエストの流れ
+```bash
+git branch develop
+git checkout develop
+gh repo set-default
+gh pr create
+```
+##### 備忘録
+1. GitHub CLIをインストールしておく
 ```bash
 sudo apt install gh
 ```
-GitHub CLIを使用するためにログイン
+2. GitHub CLIを使用するためにログイン
 ```bash
 gh auth login
 ? What account do you want to log into? GitHub.com
@@ -141,13 +148,35 @@ gh auth login
 ! First copy your one-time code: ****-****
 Press Enter to open github.com in your browser... 
 ```
-GitHub CLIを使用した場合のプルリクエストの流れ
+3. developブランチを作成
 ```bash
-git branch develop
-git checkout develop
-gh repo set-default
-gh pr create
+git checkout master
+git checkout -b develop
 ```
+4. ファイルを編集する
+5. 編集したファイルを選択
+```bash
+git add filename
+```
+6. commitする
+```bash
+git commit -m "feat:新規の機能追加"
+```
+7. push
+```bash
+git push -u origin develop (developがリモートにないとき)
+git push
+```
+8. pull requestを送る
+```bash
+gh pr create
+Creating pull request for develop into master in k-itc/lecture-ai-engineering
+? Title タイトルを書く
+? Body <Received>
+? What's next? Submit
+https://github.com/k-itc/lecture-ai-engineering/pull/1 → ブラウザで確認する
+```
+9. 「Merge pull request」ボタンでマージする
 
 # 宿題の関連情報
 ## CIでのテストケースを追加する場合のアイディアサンプル
